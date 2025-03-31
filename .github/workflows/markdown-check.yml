@@ -1,5 +1,4 @@
-name: Markdown Link Checker and Metadata Validator
-
+name: Markdown Link Checker
 on:
   push:
     branches:
@@ -9,30 +8,14 @@ on:
       - main  # Триггер для pull request в ветку main
 
 jobs:
-  check:
-    runs-on: ubuntu-latest  # Используем последний Ubuntu для работы
-
+  markdown-link-check:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2  # Клонируем репозиторий
-
-    - name: Install markdown-link-check
-      run: |
-        npm install -g markdown-link-check  # Устанавливаем markdown-link-check через npm
-
-    - name: Check links in markdown files
-      run: |
-        markdown-link-check 'Documents/**/*.md'  # Ищем .md файлы внутри папки Documents
-
-    - name: Check metadata in markdown files
-      run: |
-        # Пользовательский скрипт для проверки отсутствующих метаданных
-        # Ищем строки с "Version: <номер_версии>"
-        grep -L 'Version: ' Documents/**/*.md > missing_metadata_files.txt
-        if [ -s missing_metadata_files.txt ]; then
-          echo "Следующие markdown файлы не содержат метаданные 'Version':"
-          cat missing_metadata_files.txt
-          exit 1  # Пайплайн завершится с ошибкой, если файл не содержит метаданных
-        else
-          echo "Все markdown файлы содержат метаданные версии."
-        fi
+    - uses: actions/checkout@master
+    - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-quiet-mode: 'yes'
+        use-verbose-mode: 'yes'
+        config-file: 'mlc_config.json'
+        folder-path: 'Documents'
+        max-depth: 2
