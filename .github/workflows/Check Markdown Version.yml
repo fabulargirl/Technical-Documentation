@@ -1,0 +1,38 @@
+name: Markdown Version Check
+
+on:
+  push:
+    branches:
+      - main  # Триггер для push в ветку main
+  pull_request:
+    branches:
+      - main  # Триггер для pull request в ветку main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest  # Используем последний Ubuntu для работы
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Клонируем репозиторий
+
+    - name: Find markdown files and check for 'Version:'
+      run: |
+        # Ищем все markdown файлы и проверяем наличие 'Version:'
+        FILES=$(find . -name "*.md")  # Ищем все .md файлы в репозитории
+        FILES_WITHOUT_VERSION=0
+        for FILE in $FILES; do
+          # Проверяем наличие 'Version:' в файле
+          if ! grep -q 'Version:' "$FILE"; then
+            echo "В файле $FILE отсутствует метаданные 'Version:'"
+            FILES_WITHOUT_VERSION=1
+          fi
+        done
+
+        # Если есть файлы без метаданных 'Version:', завершаем с ошибкой
+        if [ $FILES_WITHOUT_VERSION -eq 1 ]; then
+          echo "Некоторые файлы не содержат метаданные 'Version:'. Пожалуйста, добавьте их."
+          exit 1
+        else
+          echo "Все markdown файлы содержат метаданные 'Version:'."
+        fi
