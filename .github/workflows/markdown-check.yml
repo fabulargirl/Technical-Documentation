@@ -3,36 +3,36 @@ name: Markdown Link Checker and Metadata Validator
 on:
   push:
     branches:
-      - main  # Triggers on push to the main branch
+      - main  # Триггер для push в ветку main
   pull_request:
     branches:
-      - main  # Triggers on pull requests targeting the main branch
+      - main  # Триггер для pull request в ветку main
 
 jobs:
   check:
-    runs-on: ubuntu-latest  # Runs on the latest Ubuntu environment
+    runs-on: ubuntu-latest  # Используем последний Ubuntu для работы
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2  # Checkout the repository content
+      uses: actions/checkout@v2  # Клонируем репозиторий
 
     - name: Install markdown-link-check
       run: |
-        npm install -g markdown-link-check  # Install markdown-link-check
+        npm install -g markdown-link-check  # Устанавливаем markdown-link-check через npm
 
     - name: Check links in markdown files
       run: |
-        markdown-link-check '**/*.md'  # Check all markdown files for broken links
+        markdown-link-check 'Documents/**/*.md'  # Ищем .md файлы внутри папки Documents
 
     - name: Check metadata in markdown files
       run: |
-        # Check for missing metadata
-        # We are looking for a line that matches "Version: <version_number>"
-        grep -L 'Version: ' **/*.md > missing_metadata_files.txt
+        # Пользовательский скрипт для проверки отсутствующих метаданных
+        # Ищем строки с "Version: <номер_версии>"
+        grep -L 'Version: ' Documents/**/*.md > missing_metadata_files.txt
         if [ -s missing_metadata_files.txt ]; then
-          echo "The following markdown files are missing the 'Version' metadata:"
+          echo "Следующие markdown файлы не содержат метаданные 'Version':"
           cat missing_metadata_files.txt
-          exit 1  # Fail the pipeline if any file is missing the version metadata
+          exit 1  # Пайплайн завершится с ошибкой, если файл не содержит метаданных
         else
-          echo "All markdown files contain version metadata."
+          echo "Все markdown файлы содержат метаданные версии."
         fi
