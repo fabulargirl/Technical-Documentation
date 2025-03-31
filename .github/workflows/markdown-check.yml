@@ -22,7 +22,7 @@ jobs:
 
     - name: Check links in markdown files
       run: |
-        markdown-link-check 'Documents/*.md'  # Ищем .md файлы внутри папки Documents
+        markdown-link-check 'Documents/**/*.md'  # Ищем .md файлы внутри папки Documents
 
     - name: Check metadata in markdown files
       run: |
