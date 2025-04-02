@@ -44,14 +44,3 @@ The developer will write out the use cases code examples and peculiarity of how 
 It is important that all changes in the documentation are linked to the tag of the corresponding Python version, so that, if necessary, you can quickly find the old version. 
 
 All python documentation is also stored on github, so it can also be tracked via pull requests. Each PR should contain a description of the changes and links to the corresponding changes in the library.
-
-
-# 3. Automate a Documentation Check
-
-- If you use Git-based docs, set up a simple CI script (GitHub Actions, GitLab CI, or similar) to run a linter or link checker. 
-- Demonstrate how the pipeline fails when a broken link is detected or if a document is missing crucial metadata (e.g., version number).
-
-# 4. Create a Dashboard or Report
-
-- Suggest 2–3 metrics (page views, doc coverage, document update frequency) that your team could track. 
-- Sketch a mock dashboard to visualize these metrics over time. This dashboard could be a Confluence page or a simple spreadsheet.
